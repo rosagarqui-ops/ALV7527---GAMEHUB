@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALV7527 - GAMEHUB</title>
+<meta name="description" content="Juega online o descarga juegos para Windows (.exe) y Android (.apk).">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14112b; --surface:#201b47; --surface-2:#2a2460; --line:#3b3480;
+  --text:#f3f0ff; --muted:#b6afe0; --coral:#ff5d8f; --cyan:#3de0d0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Space Grotesk",system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:40px 40px;opacity:.22;mask-image:linear-gradient(#000,transparent 70%);-webkit-mask-image:linear-gradient(#000,transparent 70%)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 20px}
+
+header.top{padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-family:"Press Start 2P",monospace;font-size:14px;letter-spacing:1px;text-decoration:none;display:flex;gap:10px;align-items:center}
+.logo i{width:14px;height:14px;background:var(--coral);box-shadow:14px 0 0 var(--cyan),0 14px 0 var(--cyan),14px 14px 0 var(--coral);margin-right:16px;margin-bottom:14px;display:inline-block}
+nav.links{display:flex;gap:18px;font-size:14px;color:var(--muted)}
+nav.links a{text-decoration:none}
+nav.links a:hover{color:var(--text)}
+
+.hero{padding:56px 0 36px}
+.hero h1{font-family:"Press Start 2P",monospace;font-size:clamp(26px,6vw,58px);line-height:1.25;letter-spacing:-1px;text-shadow:4px 4px 0 var(--coral),8px 8px 0 rgba(61,224,208,.5)}
+.hero p{margin-top:30px;max-width:56ch;font-size:18px;color:var(--muted)}
+.hero .stats{margin-top:26px;display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:var(--surface);border:1px solid var(--line);padding:6px 14px;border-radius:99px;font-size:14px}
+
+.tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0 24px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg) 75%,transparent);padding:12px 0}
+.search{flex:1 1 240px;background:var(--surface);border:2px solid var(--line);color:var(--text);border-radius:10px;padding:11px 14px;font:inherit}
+.search::placeholder{color:var(--muted)}
+.chips{display:flex;gap:8px}
+.chip{background:var(--surface);border:2px solid var(--line);color:var(--text);padding:10px 16px;border-radius:10px;font:inherit;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--coral);border-color:var(--coral);color:#1a0f25;font-weight:700}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px;padding-bottom:30px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.cover{height:150px;position:relative;display:grid;place-items:center;background:
+  linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 40%,#14112b));overflow:hidden}
+.cover::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.18) 50%,transparent 50%);background-size:100% 6px}
+.cover span{position:relative;font-family:"Press Start 2P",monospace;font-size:34px;color:#fff;text-shadow:4px 4px 0 rgba(0,0,0,.35)}
+.tag{position:absolute;top:10px;left:10px;background:rgba(20,17,43,.8);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500}
+.body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.body h3{font-size:20px}
+.body p{color:var(--muted);font-size:15px;flex:1}
+.play{background:var(--cyan);color:#082623;border:0;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:16px;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}
+.play:hover{filter:brightness(1.08)}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dl a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;border-radius:10px;background:var(--surface-2);border:2px solid var(--line);text-decoration:none;font-weight:700;font-size:14px}
+.dl a small{font-weight:400;color:var(--muted);font-size:12px}
+.dl a:hover{border-color:var(--accent)}
+.dl a.rec{border-color:var(--coral)}
+.empty{display:none;text-align:center;padding:50px 0;color:var(--muted)}
+
+.help{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;padding:30px 0 50px}
+.help div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.help h4{margin-bottom:8px;font-size:17px}
+.help p,.help li{color:var(--muted);font-size:15px}
+.help ol{padding-left:20px}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:14px;text-align:center}
+
+dialog{border:0;padding:0;background:transparent;width:min(1100px,96vw);max-width:none;margin:auto}
+dialog::backdrop{background:rgba(8,6,22,.88)}
+.player{background:var(--surface);border:2px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:min(88vh,760px)}
+.pbar{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--surface-2)}
+.pbar strong{flex:1;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbar button,.pbar a{background:var(--bg);color:var(--text);border:2px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;text-decoration:none}
+.pbar button:hover,.pbar a:hover{border-color:var(--cyan)}
+.pbar .x{background:var(--coral);border-color:var(--coral);color:#1a0f25;font-weight:700}
+iframe{flex:1;width:100%;border:0;background:#000}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:560px){nav.links{display:none}.hero{padding-top:36px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#"><i></i>ALV7527</a>
+    <nav class="links"><a href="#juegos">Juegos</a><a href="#ayuda">Ayuda</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>ALV7527<br>GAMEHUB</h1>
+    <p>Elige un juego y juégalo al instante en tu navegador, o descárgalo para Windows (.exe) y Android (.apk).</p>
+    <div class="stats">
+      <span class="pill" id="countPill"></span>
+      <span class="pill">Jugar online</span>
+      <span class="pill">Windows .exe</span>
+      <span class="pill">Android .apk</span>
+    </div>
+  </section>
+
+  <section id="juegos" aria-label="Catálogo de juegos">
+    <div class="tools">
+      <input class="search" id="q" type="search" placeholder="Buscar juego…" aria-label="Buscar juego">
+      <div class="chips" role="group" aria-label="Filtrar por plataforma">
+        <button class="chip" data-f="all" aria-pressed="true">Todos</button>
+        <button class="chip" data-f="win" aria-pressed="false">Windows</button>
+        <button class="chip" data-f="android" aria-pressed="false">Android</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty">No hay juegos con esa búsqueda.</p>
+  </section>
+
+  <section class="help" id="ayuda">
+    <div>
+      <h4>Instalar el .apk en Android</h4>
+      <ol>
+        <li>Descarga el archivo desde esta página.</li>
+        <li>Ábrelo desde Descargas.</li>
+        <li>Si Android lo pide, permite instalar apps de esta fuente.</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Abrir el .exe en Windows</h4>
+      <p>Son versiones portables: no hay instalador, basta con ejecutarlas. Si Windows muestra un aviso de SmartScreen, pulsa «Más información» y luego «Ejecutar de todas formas».</p>
+    </div>
+    <div>
+      <h4>Jugar online</h4>
+      <p>El botón «Jugar online» abre el juego dentro de esta página. Si prefieres más espacio, usa «Pantalla completa» o «Nueva pestaña» en el reproductor.</p>
+    </div>
+  </section>
+
+  <footer>ALV7527 - GAMEHUB · Hecho con cariño para jugar donde quieras</footer>
+</div>
+
+<dialog id="dlg" aria-label="Reproductor de juego">
+  <div class="player">
+    <div class="pbar">
+      <strong id="ptitle"></strong>
+      <button id="pfs" type="button">Pantalla completa</button>
+      <a id="ptab" target="_blank" rel="noopener">Nueva pestaña</a>
+      <button class="x" id="pclose" type="button">Cerrar</button>
+    </div>
+    <iframe id="frame" title="Juego" allow="fullscreen; autoplay; gamepad; accelerometer; gyroscope" allowfullscreen></iframe>
+  </div>
+</dialog>
+
+<script>
+/* ============ EDITA AQUÍ TUS JUEGOS ============
+   Los archivos .exe y .apk deben estar en la carpeta "descargas/" junto a este index.html */
+const DIR = "descargas/";
+const GAMES = [
+  { name:"Backrooms: Descenso", tag:"Terror", initials:"BR", color:"#e3c94a",
+    desc:"Baja por niveles interminables de pasillos amarillos y sobrevive a lo que habita en ellos.",
+    url:"https://rosagarqui-ops.github.io/Backrooms-Descenso/",
+    exe:["Backrooms-Descenso-Portable.exe","59.3 MB"], apk:["Backrooms-Descenso.apk","0.4 MB"] },
+  { name:"DOOM", tag:"Acción", initials:"DM", color:"#ff5a36",
+    desc:"Disparos rápidos, demonios y mucho infierno. El clásico, listo para jugar en cualquier pantalla.",
+    url:"https://rosagarqui-ops.github.io/DOOM/",
+    exe:["DOOM.exe","59.0 MB"], apk:["DOOM_1.apk","6.3 MB"] },
+  { name:"God of War: El Fantasma de Esparta", tag:"Aventura", initials:"GW", color:"#c23a55",
+    desc:"Combates épicos y mitología griega en una aventura de acción con espadas.",
+    url:"https://rosagarqui-ops.github.io/God-of-War---El-Fantasma-de-Esparta/",
+    exe:["God-of-War-El-Fantasma-de-Esparta.exe","58.9 MB"], apk:["God_of_War_-_El_Fantasma_de_Esparta_1.apk","6.1 MB"] },
+  { name:"La Velada del Año VI", tag:"Pixel art", initials:"LV", color:"#3de0d0",
+    desc:"El evento del año en versión pixel art. Entra al ring y revive la velada.",
+    url:"https://rosagarqui-ops.github.io/La-Velada-del-Ao-VI---PixelArt/",
+    exe:["La-Velada-VI-Portable.exe","62.7 MB"], apk:["La_Velada_del_Año_VI_-_PixelArt_1.apk","6.4 MB"] },
+  { name:"The Legend of Pelda", tag:"Aventura", initials:"LP", color:"#6bd35c",
+    desc:"Explora mazmorras, resuelve acertijos y rescata el reino en esta aventura con mucho humor.",
+    url:"https://rosagarqui-ops.github.io/The-Legend-of-Pelda/",
+    exe:["The-Legend-of-Pelda.exe","58.7 MB"], apk:["The_Legend_of_Pelda_1.apk","5.9 MB"] },
+  { name:"ULTRABONK", tag:"Arcade", initials:"UB", color:"#ff4fa3",
+    desc:"Caos arcade a toda velocidad: esquiva, golpea y encadena combos sin parar.",
+    url:"https://rosagarqui-ops.github.io/ULTRABONK/",
+    exe:["ULTRABONK.exe","58.9 MB"], apk:["ULTRABONK_1.apk","6.0 MB"] }
+];
+
+const ua = navigator.userAgent;
+const isAndroid = /Android/i.test(ua);
+const isWin = /Windows/i.test(ua);
+const dl = f => DIR + encodeURI(f);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const grid = document.getElementById("grid");
+GAMES.forEach((g, i) => {
+  const card = document.createElement("article");
+  card.className = "card";
+  card.style.setProperty("--accent", g.color);
+  card.dataset.name = g.name.toLowerCase();
+  card.innerHTML = `
+    <div class="cover"><span>${esc(g.initials)}</span><div class="tag">${esc(g.tag)}</div></div>
+    <div class="body">
+      <h3>${esc(g.name)}</h3>
+      <p>${esc(g.desc)}</p>
+      <button class="play" type="button" data-i="${i}">▶ Jugar online</button>
+      <div class="dl">
+        <a class="${isWin ? "rec" : ""}" href="${dl(g.exe[0])}" download>Windows .exe<small>${g.exe[1]}</small></a>
+        <a class="${isAndroid ? "rec" : ""}" href="${dl(g.apk[0])}" download>Android .apk<small>${g.apk[1]}</small></a>
+      </div>
+    </div>`;
+  grid.appendChild(card);
+});
+document.getElementById("countPill").textContent = GAMES.length + " juegos";
+
+/* Búsqueda */
+const q = document.getElementById("q"), empty = document.getElementById("empty");
+function applySearch(){
+  const t = q.value.trim().toLowerCase(); let n = 0;
+  grid.querySelectorAll(".card").forEach(c => {
+    const show = c.dataset.name.includes(t);
+    c.style.display = show ? "" : "none"; if (show) n++;
+  });
+  empty.style.display = n ? "none" : "block";
+}
+q.addEventListener("input", applySearch);
+
+/* Filtro de plataforma: resalta el botón de descarga recomendado */
+document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x === b));
+  const f = b.dataset.f;
+  grid.querySelectorAll(".card").forEach(c => {
+    const [w, a] = c.querySelectorAll(".dl a");
+    w.style.display = (f === "android") ? "none" : "";
+    a.style.display = (f === "win") ? "none" : "";
+    c.querySelector(".dl").style.gridTemplateColumns = (f === "all") ? "1fr 1fr" : "1fr";
+  });
+}));
+
+/* Reproductor */
+const dlg = document.getElementById("dlg"), frame = document.getElementById("frame");
+grid.addEventListener("click", e => {
+  const b = e.target.closest(".play"); if (!b) return;
+  const g = GAMES[+b.dataset.i];
+  document.getElementById("ptitle").textContent = g.name;
+  document.getElementById("ptab").href = g.url;
+  frame.src = g.url;
+  dlg.showModal();
+});
+function closePlayer(){ dlg.close(); frame.src = "about:blank"; }
+document.getElementById("pclose").addEventListener("click", closePlayer);
+dlg.addEventListener("cancel", () => { frame.src = "about:blank"; });
+dlg.addEventListener("click", e => { if (e.target === dlg) closePlayer(); });
+document.getElementById("pfs").addEventListener("click", () => {
+  (frame.requestFullscreen || frame.webkitRequestFullscreen || function(){}).call(frame);
+});
+</script>
+</body>
+</html>
